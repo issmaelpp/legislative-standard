@@ -18,6 +18,9 @@ class RolePermissionSeeder extends Seeder
         app()[PermissionRegistrar::class]->forgetCachedPermissions();
 
         $permissions = collect([
+            // Paneles
+            'view_admin_panel',
+            
             // User Management
             'view_any_user', // Puede ver la lista de registros
             'create_user',

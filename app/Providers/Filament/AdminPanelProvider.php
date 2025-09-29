@@ -2,11 +2,13 @@
 
 namespace App\Providers\Filament;
 
+use Filament\Actions\Action;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
-use Filament\Pages\Dashboard;
+use Filament\Navigation\NavigationItem;
+use App\Filament\Pages\Admin;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
@@ -34,7 +36,7 @@ class AdminPanelProvider extends PanelProvider
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\Pages')
             ->pages([
-                Dashboard::class,
+                Admin::class,
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\Filament\Widgets')
             ->widgets([
@@ -54,6 +56,20 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->authMiddleware([
                 Authenticate::class,
+            ])
+            ->navigationItems([
+                NavigationItem::make('Administración')
+                    ->url('/dashboard')
+                    ->icon('heroicon-o-building-library')
+                    ->sort(-2),
+                /* NavigationItem::make('Pulse')
+                    ->url('/administracion/pulse', true)
+                    ->icon('heroicon-o-eye')
+                    ->group('Monitoreo'),
+                NavigationItem::make('Telescope')
+                    ->url('/administracion/telescope', true)
+                    ->icon('heroicon-o-exclamation-triangle')
+                    ->group('Monitoreo'), */
             ]);
     }
 }
