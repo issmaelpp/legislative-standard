@@ -17,7 +17,7 @@ use Illuminate\Support\Str;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Spatie\Permission\Traits\HasRoles;
 
-#[ObservedBy([UserObserver::class])]
+//#[ObservedBy([UserObserver::class])]
 class User extends Authenticatable implements FilamentUser, HasAvatar, HasName
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
