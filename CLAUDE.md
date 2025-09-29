@@ -69,7 +69,10 @@ php artisan db:seed                   # Run seeders
 - **Spatie Laravel Permission** package for roles and permissions
 - Role-based access to Filament admin panel
 - User roles determine admin panel accessibility
+- Super Admin role has blanket authorization via Gate (see `AppServiceProvider::boot()`)
 - Activity logging via **Spatie Laravel ActivityLog**
+- User activity tracked via `UserObserver` (currently commented out in User model)
+- Activity logging includes device details via Matomo Device Detector
 
 ### Livewire Integration
 - **Volt-based architecture**: Single-file components mixing PHP logic and Blade templates
@@ -93,8 +96,12 @@ php artisan db:seed                   # Run seeders
 ### Directory Structure
 - `app/Http/` - Controllers and middleware
 - `app/Livewire/Actions/` - Livewire action classes
-- `app/Models/` - Eloquent models (User model included)
+- `app/Models/` - Eloquent models (User model with SoftDeletes and HasRoles traits)
+- `app/Observers/` - Model observers (UserObserver for activity tracking)
+- `app/Providers/` - Service providers (App, Fortify, Volt)
 - `app/Providers/Filament/` - Filament panel providers
+- `app/Services/` - Application services (ActivityLoggerService, WordFormatterService)
+- `database/seeders/` - Database seeders (RolePermissionSeeder, UserSeeder)
 - `resources/views/livewire/` - Volt components
 - `resources/views/components/` - Blade components
 - `resources/views/flux/` - Flux UI customizations
@@ -122,6 +129,13 @@ php artisan db:seed                   # Run seeders
 
 ## Development Environment
 - **PHP 8.2+** required (CI uses PHP 8.4)
+- **Node 22** used in CI
 - **Laravel Sail** available for Docker development
 - **EditorConfig** for consistent code formatting
 - Concurrent development setup via `composer dev` command
+
+## Services Architecture
+- **ActivityLoggerService**: Logs model events with device/browser details (IP, user agent, OS, browser)
+- **WordFormatterService**: Handles grammatical formatting for activity log messages (gender-aware)
+- Device detection uses Matomo Device Detector library
+- Activity logs stored via Spatie ActivityLog with properties for attributes, old values, and device info
