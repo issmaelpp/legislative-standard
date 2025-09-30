@@ -46,6 +46,13 @@ class TrackAccessActivity
             'flux/*',               // Flux framework assets
             'storage/*',            // Storage files
             'up',                   // Health check endpoint
+            'login',                // Login page & POST (tracked by LogSuccessfulLogin listener)
+            'logout',               // Logout (tracked by LogSuccessfulLogout listener)
+            'register',             // Register (tracked by LogRegisteredUser listener)
+            'forgot-password',      // Password reset pages
+            'reset-password/*',     // Password reset pages
+            'verify-email',         // Email verification
+            'verify-email/*',       // Email verification
         ];
 
         foreach ($skipPaths as $pattern) {

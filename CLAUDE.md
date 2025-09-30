@@ -70,9 +70,22 @@ php artisan db:seed                   # Run seeders
 - Role-based access to Filament admin panel
 - User roles determine admin panel accessibility
 - Super Admin role has blanket authorization via Gate (see `AppServiceProvider::boot()`)
-- Activity logging via **Spatie Laravel ActivityLog**
-- User activity tracked via `UserObserver` (currently commented out in User model)
-- Activity logging includes device details via Matomo Device Detector
+
+### Activity Logging System
+- Uses **Spatie Laravel ActivityLog** for comprehensive activity tracking
+- **Three types of activity logs** (differentiated by `log_name`):
+  1. **`authentication`** - Authentication events (login, logout, register, login_failed)
+  2. **`access`** - HTTP access tracking (page visits, API calls)
+  3. **`default`** - Model changes (create, update, delete, restore)
+- **Event Listeners** in `app/Listeners/` automatically log authentication events via Laravel's auto-discovery:
+  - `LogSuccessfulLogin` - Logs successful logins
+  - `LogSuccessfulLogout` - Logs logouts
+  - `LogFailedLogin` - Logs failed login attempts
+  - `LogRegisteredUser` - Logs new user registrations
+  - **Note**: Listeners are auto-discovered, NOT manually registered in service providers
+- **Middleware** `TrackAccessActivity` logs all HTTP requests (registered in `bootstrap/app.php`)
+- **Model Observers** track changes to Eloquent models (e.g., `UserObserver`)
+- All logs include device details via Matomo Device Detector (IP, user agent, OS, browser, bot detection)
 
 ### Livewire Integration
 - **Volt-based architecture**: Single-file components mixing PHP logic and Blade templates
@@ -95,6 +108,7 @@ php artisan db:seed                   # Run seeders
 
 ### Directory Structure
 - `app/Http/` - Controllers and middleware
+- `app/Listeners/` - Event listeners (authentication event logging)
 - `app/Livewire/Actions/` - Livewire action classes
 - `app/Models/` - Eloquent models (User model with SoftDeletes and HasRoles traits)
 - `app/Observers/` - Model observers (UserObserver for activity tracking)

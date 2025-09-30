@@ -59,7 +59,7 @@ class ActivityLoggerService
             ->log($message);
     }
 
-    protected function getDeviceDetails(): array
+    public function getDeviceDetails(): array
     {
         $dd = new DeviceDetector(request()->userAgent());
         // Do NOT skip bot detection for access logging

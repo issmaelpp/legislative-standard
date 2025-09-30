@@ -85,11 +85,27 @@ class ActivityLogResource extends Resource
                 Tables\Columns\TextColumn::make('event')
                     ->label('Evento')
                     ->badge()
-                    ->color(fn (string $state): string => match ($state) {
+                    ->color(fn (?string $state): string => match ($state) {
                         'created' => 'success',
                         'updated' => 'warning',
                         'deleted' => 'danger',
+                        'login' => 'info',
+                        'logout' => 'gray',
+                        'registered' => 'success',
+                        'login_failed' => 'danger',
                         default => 'gray',
+                    })
+                    ->formatStateUsing(fn (?string $state): string => match ($state) {
+                        'login' => 'Inicio de Sesión',
+                        'logout' => 'Cierre de Sesión',
+                        'registered' => 'Registro',
+                        'login_failed' => 'Login Fallido',
+                        'created' => 'Creado',
+                        'updated' => 'Actualizado',
+                        'deleted' => 'Eliminado',
+                        'restored' => 'Restaurado',
+                        'force_deleted' => 'Eliminado Permanente',
+                        default => $state ?? '-',
                     })
                     ->searchable()
                     ->sortable()
@@ -114,10 +130,17 @@ class ActivityLogResource extends Resource
                 Tables\Filters\SelectFilter::make('event')
                     ->label('Evento')
                     ->options([
+                        'login' => 'Inicio de Sesión',
+                        'logout' => 'Cierre de Sesión',
+                        'registered' => 'Registro',
+                        'login_failed' => 'Login Fallido',
                         'created' => 'Creado',
                         'updated' => 'Actualizado',
                         'deleted' => 'Eliminado',
-                    ]),
+                        'restored' => 'Restaurado',
+                        'force_deleted' => 'Eliminado Permanente',
+                    ])
+                    ->multiple(),
 
                 Tables\Filters\SelectFilter::make('subject_type')
                     ->label('Modelo')
