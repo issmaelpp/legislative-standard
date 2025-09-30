@@ -12,6 +12,11 @@ class TrackAccessActivity
     /**
      * Handle an incoming request.
      *
+     * Performance optimizations:
+     * - Rate limiting for authenticated users (1 log per 5 minutes)
+     * - Device detection cached for 24 hours
+     * - Bot detection skipped for authenticated users
+     *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
     public function handle(Request $request, Closure $next): Response
@@ -25,6 +30,7 @@ class TrackAccessActivity
         }
 
         // Log the access after the request has been processed
+        // Note: ActivityLoggerService now implements rate limiting and caching internally
         try {
             app(ActivityLoggerService::class)->logAccess($request, $response);
         } catch (\Exception $e) {

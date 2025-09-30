@@ -13,6 +13,15 @@ return [
     | framework. This connection is utilized if another isn't explicitly
     | specified when running a cache operation inside the application.
     |
+    | Performance Note:
+    | The 'database' driver works but adds latency to every cache operation.
+    | For better performance with ActivityLoggerService caching:
+    | - Use 'file' for simple setups (no additional dependencies)
+    | - Use 'redis' for production environments with multiple servers
+    | - Use 'memcached' for high-traffic applications
+    |
+    | To switch: Set CACHE_STORE=file in your .env file
+    |
     */
 
     'default' => env('CACHE_STORE', 'database'),
