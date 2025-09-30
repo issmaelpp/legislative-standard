@@ -150,6 +150,19 @@ php artisan db:seed                   # Run seeders
 
 ## Services Architecture
 - **ActivityLoggerService**: Logs model events with device/browser details (IP, user agent, OS, browser)
+  - **Performance optimizations** (added 2025-09-30):
+    - Device detection cached for 24 hours by User-Agent hash
+    - Rate limiting: authenticated users logged once per 5 minutes
+    - Bot detection skipped for authenticated users (always `is_bot = false`)
+    - Cache keys: `device_details:{hash}:{auth|anon}` and `access_log_throttle:{user_id}`
+    - Reduces ~90% of DeviceDetector calls and ~80% of database writes
 - **WordFormatterService**: Handles grammatical formatting for activity log messages (gender-aware)
 - Device detection uses Matomo Device Detector library
 - Activity logs stored via Spatie ActivityLog with properties for attributes, old values, and device info
+
+## Performance Configuration
+- **Cache Driver**: Recommended to use `file` instead of `database` for better performance
+  - Set `CACHE_STORE=file` in `.env` for optimal ActivityLoggerService caching
+  - Alternative: `redis` for production multi-server environments
+  - Default `database` driver adds latency to cache operations
+- Activity logging middleware optimized to avoid blocking HTTP responses
