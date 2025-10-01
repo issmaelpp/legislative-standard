@@ -16,6 +16,40 @@ This is a Laravel 12 application using the official Laravel Livewire Starter Kit
 - **Spatie Laravel ActivityLog** for activity tracking
 - **Matomo Device Detector** (^6.4) for bot detection and device/browser analysis
 
+## Filament Development Guidelines
+
+**CRITICAL: Before writing ANY Filament code, you MUST:**
+
+1. **Check vendor files first** - Read the actual class definitions in `vendor/filament/` to verify:
+   - Correct namespaces for components
+   - Required parameters for methods
+   - Available methods and their signatures
+
+2. **Never assume Filament 3.x syntax works in Filament 4.x** - The architecture changed significantly:
+   - **Forms**: Use `Filament\Forms\Components\*` for inputs (TextInput, Select, FileUpload)
+   - **Tables**: Use `Filament\Tables\Columns\*` for columns (TextColumn, ImageColumn)
+   - **Infolists**: Use `Filament\Infolists\Components\*` for entries (TextEntry, ImageEntry)
+   - **Schemas**: Use `Filament\Schemas\Components\*` for containers (Section, Grid, Fieldset)
+   - **Actions**: Use `Filament\Actions\*` (not `Filament\Tables\Actions\*`)
+   - **Modern syntax**: Use `->recordActions()` and `->toolbarActions()` instead of `->actions()` and `->bulkActions()`
+
+3. **Search for existing examples** - Before creating new Filament resources:
+   ```bash
+   # Search for existing resources to follow the same pattern
+   find app/Filament/Resources -name "*.php" -type f
+   ```
+
+4. **Use official commands** - Always generate scaffolding with artisan:
+   ```bash
+   php artisan make:filament-resource ModelName --generate --view --soft-deletes
+   ```
+
+5. **Infolist components must use model attributes only** - Cannot use methods like `initials()` or computed properties. Only direct attributes and relationships are allowed.
+
+6. **Test immediately** - After writing Filament code, verify it works before proceeding.
+
+**DO NOT write Filament code from memory or assumptions. ALWAYS verify with vendor files first.**
+
 ## Development Commands
 
 ### Starting Development

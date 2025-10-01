@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(timeout 8 bash -c \"sleep 5 && curl -s -o /dev/null -w ''%{http_code}'' http://127.0.0.1:8000/admin/users 2>&1 || echo ''Connection failed''\")",
+      "Bash(cat:*)",
+      "Bash(php artisan make:filament-resource:*)",
+      "Bash(mkdir:*)",
+      "Bash(timeout:*)",
+      "Bash(php artisan:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
